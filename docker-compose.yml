@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: transfermarkt-db
+    restart: always
+    environment:
+      POSTGRES_USER: transfer_user
+      POSTGRES_PASSWORD: transfer_pass
+      POSTGRES_DB: transfermarkt
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  fullstack:
+    build:
+      context: .
+      dockerfile: Dockerfilemain   # deja îl ai
+    container_name: fullstack
+    depends_on:
+      - db
+    environment:
+      # variabilă pentru conexiunea la DB, o citești în FastAPI
+      DATABASE_URL: postgresql://transfer_user:transfer_pass@db:5432/transfermarkt
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 5001 --reload
+
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile        # deja îl ai
+    container_name: react
+    depends_on:
+      - fullstack
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      # folosit de Vite (vezi mai jos)
+      VITE_API_URL: http://localhost:5001
+
+volumes:
+  postgres_data:
