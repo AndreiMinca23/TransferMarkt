@@ -46,7 +46,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           # dacă pytest nu e în requirements, decomentează linia următoare:
-          # pip install pytest
+          pip install pytest
 
       - name: Run backend tests
         working-directory: backend
@@ -72,7 +72,8 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: frontend
-        run: npm ci
+        run: npm install
+
 
       - name: Build frontend
         working-directory: frontend
