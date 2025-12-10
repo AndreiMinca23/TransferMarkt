@@ -47,6 +47,7 @@ jobs:
           pip install -r requirements.txt
           # dacă pytest nu e în requirements, decomentează linia următoare:
           pip install pytest
+          pip install httpx
 
       - name: Run backend tests
         working-directory: backend

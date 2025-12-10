@@ -6,3 +6,5 @@ python-dotenv
 pydantic
 alembic
 email-validator
+pytest
+httpx
