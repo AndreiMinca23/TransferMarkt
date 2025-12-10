@@ -8,6 +8,8 @@ import MainTabs, { MainTab } from "./components/MainTabs";
 import PlayerDetailsCard from "./components/PlayerDetailsCard";
 import DiscoverTopPlayers from "./components/DiscoverTopPlayers";
 import DiscoverTopClubs from "./components/DiscoverTopClubs";
+import DiscoverRecommended from "./components/DiscoverRecommended";
+import { addToHistory } from "./history";
 
 import {
   getHealth,
@@ -84,6 +86,7 @@ function App() {
   const handleSearch = async (query: string) => {
     try {
       const res = await searchEntities(query);
+      console.log("searchEntities result:", res); 
 
       if (res.type === "club") {
         // “pagina” pentru club
@@ -93,6 +96,9 @@ function App() {
         setSearchedClubPlayers(res.players);
         setSelectedClub(res.club.id);
         setSearchedPlayer(null);
+
+        // salvăm clubul în istoric (fără poziție)
+        
       } else {
         // “pagina” pentru jucător
         setView("player");
@@ -100,6 +106,15 @@ function App() {
         setSearchedPlayer(res.player);
         setSearchedClub(null);
         setSearchedClubPlayers([]);
+
+        // salvăm jucătorul în istoric (cu poziție)
+        addToHistory({
+          id: res.player.id,
+          name: res.player.name,
+          type: "player",
+          position: res.player.position_name || undefined,
+          league: res.player.competition_name || undefined,
+        });
       }
     } catch (err) {
       console.error(err);
@@ -192,21 +207,27 @@ function App() {
       {mainTab !== "squads" && (
         <>
           {mainTab === "discover" && (
-  <>
-    <section className="page-header">
-      <div>
-        <h1>Discover</h1>
-        <p>
-          Explorează cei mai valoroși jucători și cele mai puternice
-          loturi din baza ta de date.
-        </p>
-      </div>
-    </section>
+            <>
+              <section className="page-header">
+                <div>
+                  <h1>Discover</h1>
+                  <p>
+                    Explorează cei mai valoroși jucători și cele mai puternice
+                    loturi din baza ta de date.
+                  </p>
+                </div>
+              </section>
 
-    <DiscoverTopPlayers />
-    <DiscoverTopClubs />
-  </>
-)}
+              {/* Pasul 1 – Top jucători */}
+              <DiscoverTopPlayers />
+
+              {/* Pasul 2 – Top cluburi */}
+              <DiscoverTopClubs />
+
+              {/* Pasul 3 – Recommended for you (după ultima căutare) */}
+              <DiscoverRecommended />
+            </>
+          )}
 
           {mainTab !== "discover" && (
             <section className="card main-tab-placeholder">
@@ -243,7 +264,7 @@ function App() {
               setSearchedPlayer(null);
             }}
           >
-             Înapoi la marketplace
+            Înapoi la marketplace
           </button>
 
           <PlayerDetailsCard player={searchedPlayer} />
@@ -261,7 +282,7 @@ function App() {
               setSearchedClubPlayers([]);
             }}
           >
-             Înapoi la marketplace
+            Înapoi la marketplace
           </button>
 
           <div className="page-header">

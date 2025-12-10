@@ -983,3 +983,23 @@ body {
   color: #22c55e;
   font-size: 0.9rem;
 }
+
+.players-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.history-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #243b53;
+  background: #0b1622;
+  font-size: 0.8rem;
+}

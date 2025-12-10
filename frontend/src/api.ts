@@ -175,6 +175,7 @@ export type PlayerDetails = {
   position_name: string | null;
   club_name: string | null;
   market_value: string | null;
+  competition_name: string | null; s
 };
 
 export type SearchClubResponse = {

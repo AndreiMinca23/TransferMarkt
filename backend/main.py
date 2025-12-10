@@ -142,6 +142,11 @@ def get_top_players(limit: int = 10, db: Session = Depends(get_db)):
                 "position_name": p.position.name if p.position else None,
                 "club_name": p.current_club.name if p.current_club else None,
                 "market_value": p.market_value,
+                "competition_name": (
+                    p.current_club.competition.name
+                    if p.current_club and p.current_club.competition
+                    else None
+                ),
             }
         )
 
@@ -167,6 +172,11 @@ def get_players(club_id: int | None = None, db: Session = Depends(get_db)):
                 "position_name": p.position.name if p.position else None,
                 "club_name": p.current_club.name if p.current_club else None,
                 "market_value": p.market_value,
+                "competition_name": (
+                    p.current_club.competition.name
+                    if p.current_club and p.current_club.competition
+                    else None
+                ),
             }
         )
 
@@ -191,6 +201,11 @@ def get_player_by_id(player_id: int, db: Session = Depends(get_db)):
         "position_name": player.position.name if player.position else None,
         "club_name": player.current_club.name if player.current_club else None,
         "market_value": player.market_value,
+        "competition_name": (
+            player.current_club.competition.name
+            if player.current_club and player.current_club.competition
+            else None
+        ),
     }
 
 

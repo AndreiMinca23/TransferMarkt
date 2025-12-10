@@ -119,6 +119,7 @@ class PlayerDetails(BaseModel):
   position_name: Optional[str] = None
   club_name: Optional[str] = None
   market_value: Optional[Decimal] = None
+  competition_name: str | None = None
 
   class Config:
       from_attributes = True
